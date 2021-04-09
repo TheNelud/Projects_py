@@ -2,7 +2,8 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QSize
 from opf_tabs import MyTabWidget
-import openpyxl, os
+from opf_menubar import MenuBar
+
 
 # Наследуемся от QMainWindow
 class MainWindow(QMainWindow):
@@ -16,57 +17,20 @@ class MainWindow(QMainWindow):
         self.central_widget = QWidget(self)                         # Создаём центральный виджет
         self.setCentralWidget(self.central_widget)                  # Устанавливаем центральный виджет
 
+        self.menubar_widgets = MenuBar(self)
+        self.setMenuBar(self.menubar_widgets.menuBar)
+
         self.tab_widget = MyTabWidget(self)
         self.setCentralWidget(self.tab_widget)
 
-        self.createMenuBar()
-
-    def createMenuBar(self):                                        #создание менюбара
-
-        self.menuBar = QMenuBar(self)
-        self.setMenuBar(self.menuBar)
-
-        fileMenu = QMenu("&Файл", self)
-        self.menuBar.addMenu(fileMenu)
-
-        fileMenu.addAction("Открыть", self.action_clicked)
-        fileMenu.addAction("Сохранить", self.action_clicked)
-
-    @QtCore.pyqtSlot()
-    def action_clicked(self):
-        action = self.sender()
-        if action.text() == "Открыть":                              #Отработка нажатия кнопки Отркрыть
-            open_file = QFileDialog.getOpenFileName(self)[0]        #Открытия меню выбора файла
-
-            try:
-                book = openpyxl.open(open_file, read_only=True)     #Подключаем openpyxl, выбираем файл xlsx
-                header_list_first = []
-                data_list_first = []
-
-                sheet_first = book.worksheets[0]                    # Работаем с первым листом
-                sheet_second = book.worksheets[1]                   # Работаем со вторым листом
-                sheet_third = book.worksheets[2]                    # Работаем с третьим листом
-                sheet_fourth = book.worksheets[3]                   # Работаем с четвертым листом
-                sheet_fifth = book.worksheets[4]                    # Работаем с пятым листом
-
-            except FileNotFoundError:                               #Проверка на невыбраный файл
-                print("No such file")
-
-
-
-        elif action.text() == "Сохранить":                          #Отработка нажатия кнопки Сохранить
-            print("Save")
-            # save_file = QFileDialog.getSaveFileName(self)[0]
-
-
-
-
-
+        # self.menubar_widget = MenuBar(self)
+        # self.setMenuBar(self.menubar_widget)
+#
 
 
 if __name__ == "__main__":
-    import sys
 
+    import sys
     app = QApplication(sys.argv)
     mw = MainWindow()
     mw.show()
